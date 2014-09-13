@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="css/foundation.min.css" title="foundation" type="text/css" />
+
+    <title>Angular Experiment (Bikes)</title>
+  </head>
+  <body ng-app="exampleApp">
+    <section ng-controller="bikeFeedCtrl" class="row" >
+      <h1>All Available Bike Stations:</h1>
+      <h4> Last refreshed @ {{allBikeStations.executionTime}}</h4>
+
+      <div ng-repeat="station in allBikeStations.stationBeanList" class="small-2 columns" style="border:1px solid red;">
+        <p>{{station.stationName}}</p>
+        <button type="button" ng-click="addToWatchList(station.id)">Add To Cart</button>
+      </div>
+    </section>
+
+    <hr />
+
+    <section ng-controller="trackingCtrl">
+      <h1>These are the stations you track</h1>
+      (last updated at {{lastUpdated}})
+
+      <table id="bike-stations-container" class="large-6">
+        <tr>
+          <th>Name</th>
+          <th>Available Bikes</th>
+          <th>Available Docks</th>
+        </tr>
+
+        <tr ng-repeat="station in watchFactory.watchedStations()">
+          <td class='station-name'>
+            {{station.stationName}}
+          </td>
+          <td class='station-bikes'>
+            {{station.availableBikes}}
+          </td>
+          <td class='station-docks'>
+            {{station.availableDocks}}
+          </td>
+        </tr>
+      </table>
+    </section>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+    <script src="http://underscorejs.org/underscore-min.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
