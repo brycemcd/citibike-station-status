@@ -5,8 +5,17 @@ exampleApp.factory("CartItemsFactory", function(){
     {name: 'Default Product', price: 12.99}
   ];
 
+
+
   return {
-    cartItems: cartItems
+    cartItems: cartItems,
+    cartTotal: function() {
+      var total = 0.00;
+      angular.forEach(this.cartItems, function(obj, ind) {
+        total = total += obj.price
+      }, total);
+      return total;
+    }
   };
 
 });
@@ -27,11 +36,13 @@ exampleApp.factory("AvailableProductsFactory", function(){
 
 exampleApp.controller('productCtrl', function($scope, CartItemsFactory, AvailableProductsFactory) {
   $scope.cartItems = CartItemsFactory.cartItems;
+  $scope.cartTotal = CartItemsFactory.cartTotal;
   $scope.allProducts = AvailableProductsFactory.allProducts;
 
   $scope.addToCart = function(ind) {
     console.log($scope.allProducts[ind]);
     $scope.cartItems.push($scope.allProducts[ind]);
+    console.log('cart total: ', $scope.cartTotal() );
   };
 });
 
