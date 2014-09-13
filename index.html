@@ -2,17 +2,21 @@
 <html lang="en">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="css/foundation.min.css" title="foundation" type="text/css" />
 
     <title>Angular Experiment</title>
   </head>
   <body ng-app="exampleApp">
-    <section ng-controller="productCtrl">
+    <section ng-controller="productCtrl" class="row" >
       <h1>All Available Products For You:</h1>
 
-      <div ng-repeat="product in allProducts">
+      <div ng-repeat="product in allProducts" class="large-3 columns">
         <h2> {{product.name}} </h2>
+        <button type="button" ng-click="addToCart($index)">Add To Cart</button>
       </div>
     </section>
+
+    <hr />
 
     <section ng-controller="cartCtrl">
       <h1>This is your cart:</h1>

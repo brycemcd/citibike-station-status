@@ -28,6 +28,11 @@ exampleApp.factory("AvailableProductsFactory", function(){
 exampleApp.controller('productCtrl', function($scope, CartItemsFactory, AvailableProductsFactory) {
   $scope.cartItems = CartItemsFactory.cartItems;
   $scope.allProducts = AvailableProductsFactory.allProducts;
+
+  $scope.addToCart = function(ind) {
+    console.log($scope.allProducts[ind]);
+    $scope.cartItems.push($scope.allProducts[ind]);
+  };
 });
 
 exampleApp.controller('cartCtrl', function($scope, CartItemsFactory) {
