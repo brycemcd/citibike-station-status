@@ -6,15 +6,19 @@ exampleApp.factory("CartItemsFactory", function(){
   ];
 
 
-
   return {
     cartItems: cartItems,
+    // TODO: move this up
     cartTotal: function() {
       var total = 0.00;
       angular.forEach(this.cartItems, function(obj, ind) {
         total = total += obj.price
       }, total);
       return total;
+    },
+
+    cartItemsCount: function() {
+      return this.cartItems.length;
     }
   };
 
@@ -38,15 +42,17 @@ exampleApp.controller('productCtrl', function($scope, CartItemsFactory, Availabl
   $scope.cartItems = CartItemsFactory.cartItems;
   $scope.cartTotal = CartItemsFactory.cartTotal;
   $scope.allProducts = AvailableProductsFactory.allProducts;
+  $scope.cart = CartItemsFactory;
 
   $scope.addToCart = function(ind) {
     console.log($scope.allProducts[ind]);
     $scope.cartItems.push($scope.allProducts[ind]);
-    console.log('cart total: ', $scope.cartTotal() );
+    console.log('cart total: ', $scope.cart.cartTotal() );
   };
 });
 
 exampleApp.controller('cartCtrl', function($scope, CartItemsFactory) {
   $scope.cartItems = CartItemsFactory.cartItems;
+  $scope.cart = CartItemsFactory;
 });
 

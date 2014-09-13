@@ -21,12 +21,26 @@
     <section ng-controller="cartCtrl">
       <h1>This is your cart:</h1>
 
-      <div id="cart-items-container">
-        <div ng-repeat="item in cartItems">
-          <div class='cart-item'>
+      <table id="cart-items-container" class="large-6">
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+        </tr>
+
+        <tr ng-repeat="item in cartItems">
+          <td class='item-name'>
             {{item.name}}
-          </div>
-        </div>
+          </td>
+          <td class='item-price'>
+            {{item.price}}
+          </td>
+        </tr>
+      </table>
+
+      <div id="cart-totals">
+        <p id='cart-item-count'> Item Count: {{cart.cartItemsCount()}} </p>
+        <p id='cart-total'>Cart Total: {{cart.cartTotal() | currency}}</p>
+
       </div>
     </section>
 
