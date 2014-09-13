@@ -6,12 +6,24 @@
     <title>Angular Experiment</title>
   </head>
   <body ng-app="exampleApp">
-    <section ng-controller="exampleCtrl1">
-      
+    <section ng-controller="productCtrl">
+      <h1>All Available Products For You:</h1>
+
+      <div ng-repeat="product in allProducts">
+        <h2> {{product.name}} </h2>
+      </div>
     </section>
 
-    <section ng-controller="exampleCtrl2">
-      
+    <section ng-controller="cartCtrl">
+      <h1>This is your cart:</h1>
+
+      <div id="cart-items-container">
+        <div ng-repeat="item in cartItems">
+          <div class='cart-item'>
+            {{item.name}}
+          </div>
+        </div>
+      </div>
     </section>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
