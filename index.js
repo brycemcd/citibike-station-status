@@ -106,6 +106,7 @@ exampleApp.factory("WatchedBikeStations", function(BikeStationCensus) {
       return this.watchedIdList.length;
     },
     watchedStations : function() {
+      console.log('watchedStationscall');
       var stationObjects = [];
       angular.forEach(this.watchedIdList, function(ind, val) {
         var theStation = _.find(BikeStationCensus.allBikeStations, function(ele) {
@@ -128,22 +129,21 @@ exampleApp.controller('bikeFeedCtrl', function($scope, BikeStationCensus, Watche
 
 
   $scope.stationFactory = BikeStationCensus;
+  $scope.watchedStationsFactory = WatchedBikeStations;
 
   $scope.addToWatchList = function(id) {
-    $scope.stationFactory.testingData = BikeStationCensus.refreshTime();
-    $scope.watchedBikeStations.push(id);
+    $scope.watchedStationsFactory.watchedIdList.push(id);
   };
 });
 
 exampleApp.controller('trackingCtrl', function($scope, $interval, BikeStationCensus, WatchedBikeStations) {
   $scope.watchedStationIds = WatchedBikeStations.watchedIdList;
-  $scope.watchFactory = WatchedBikeStations;
 
   $scope.stationFactory = BikeStationCensus;
+  $scope.watchedStationsFactory = WatchedBikeStations;
 
   $scope.foo = function() {
     $scope.stationFactory.testingData = BikeStationCensus.refreshTime();
-    //$scope.refreshTime = BikeStationCensus.refreshTime();
   }
   $interval($scope.foo , 3000, 5);
 

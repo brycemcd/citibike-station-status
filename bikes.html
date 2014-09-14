@@ -22,6 +22,7 @@
     <section ng-controller="trackingCtrl">
       <h1>These are the stations you track</h1>
       (last updated at {{stationFactory.testingData}})
+      (idlist {{watchedStationsFactory.watchedIdList | json}})
 
       <table id="bike-stations-container" class="large-6">
         <tr>
@@ -30,7 +31,7 @@
           <th>Available Docks</th>
         </tr>
 
-        <tr ng-repeat="station in watchFactory.watchedStations()">
+        <tr ng-repeat="station in watchedStationsFactory.watchedStations()">
           <td class='station-name'>
             {{station.stationName}}
           </td>
