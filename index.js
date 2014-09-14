@@ -57,61 +57,41 @@ exampleApp.controller('cartCtrl', function($scope, CartItemsFactory) {
 });
 
 
-exampleApp.factory("BikeStationCensus", function($http){
+exampleApp.factory("BikeStationCensus", function($http, $interval){
 
-  return {
-    allBikeStations : function(){
-      var stations = {};
-      $http.get("http://www.citibikenyc.com/stations/json").success(function(data){
-        console.log(data);
-        stations = data;
+  var stations = [];
+  var refreshTime = new Date();
+  
+  var fetch_stations = function() {
+      console.log("fetching:");
+      $http.get("/station_info.json").success(function(data){
+        angular.forEach(data.stationBeanList, function(obj, ind){
+          stations.push(obj);
+        });
       });
       return stations;
-      return {
-            "executionTime": "2014-09-13 01:41:01 PM",
-            "stationBeanList": [
-                  {
-              "id": 72,
-              "stationName": "W 52 St & 11 Ave",
-              "availableDocks": 21,
-              "totalDocks": 39,
-              "latitude": 40.76727216,
-              "longitude": -73.99392888,
-              "statusValue": "In Service",
-              "statusKey": 1,
-              "availableBikes": 18,
-              "stAddress1": "W 52 St & 11 Ave",
-              "stAddress2": "",
-              "city": "",
-              "postalCode": "",
-              "location": "",
-              "altitude": "",
-              "testStation": false,
-              "lastCommunicationTime": null,
-              "landMark": ""
-            },
-            {
-              "id": 79,
-              "stationName": "Franklin St & W Broadway",
-              "availableDocks": 29,
-              "totalDocks": 33,
-              "latitude": 40.71911552,
-              "longitude": -74.00666661,
-              "statusValue": "In Service",
-              "statusKey": 1,
-              "availableBikes": 4,
-              "stAddress1": "Franklin St & W Broadway",
-              "stAddress2": "",
-              "city": "",
-              "postalCode": "",
-              "location": "",
-              "altitude": "",
-              "testStation": false,
-              "lastCommunicationTime": null,
-              "landMark": ""
-            }]
-      }
-    }
+  };
+
+  var refresh_functions = function() {
+    this.stations = fetch_stations();
+  };
+
+  var setRefreshTime = function() {
+    refreshTime = new Date();
+    console.log('refreshingtime', refreshTime);
+    return refreshTime;
+  }
+
+
+  //$interval(function() { refreshTime = setRefreshTime() }, 1000, 10);
+  //
+
+  this.stations = fetch_stations();
+  //this.refreshTime = $interval(setRefreshTime, 1000, 10);
+
+  return {
+    allBikeStations : this.stations,
+    refreshTime     : function() { return setRefreshTime() }
   };
 });
 
@@ -127,7 +107,7 @@ exampleApp.factory("WatchedBikeStations", function(BikeStationCensus) {
     watchedStations : function() {
       var stationObjects = [];
       angular.forEach(this.watchedIdList, function(ind, val) {
-        var theStation = _.find(BikeStationCensus.allBikeStations().stationBeanList, function(ele) {
+        var theStation = _.find(BikeStationCensus.allBikeStations, function(ele) {
           return ele.id == ind
         });
 
@@ -141,17 +121,30 @@ exampleApp.factory("WatchedBikeStations", function(BikeStationCensus) {
 });
 
 exampleApp.controller('bikeFeedCtrl', function($scope, BikeStationCensus, WatchedBikeStations) {
-  $scope.allBikeStations = BikeStationCensus.allBikeStations();
+  $scope.allBikeStations = BikeStationCensus.allBikeStations;
   $scope.watchedBikeStations = WatchedBikeStations.watchedIdList;
+
+
+  $scope.stationFactory = BikeStationCensus;
 
   $scope.addToWatchList = function(id) {
     $scope.watchedBikeStations.push(id);
   };
 });
 
-exampleApp.controller('trackingCtrl', function($scope, BikeStationCensus, WatchedBikeStations) {
+exampleApp.controller('trackingCtrl', function($scope, $interval, BikeStationCensus, WatchedBikeStations) {
   $scope.watchedStationIds = WatchedBikeStations.watchedIdList;
   $scope.watchFactory = WatchedBikeStations;
-  $scope.lastUpdated = BikeStationCensus.allBikeStations().executionTime;
+
+  $scope.stationFactory = BikeStationCensus;
+
+
+  $scope.foo = function() {
+    console.log('foo');
+    BikeStationCensus.refreshTime();
+    BikeStationCensus.allBikeStations;
+  }
+  ////$interval(function() { console.log(BikeStationCensus.refreshTime()); }, 1000, 5);
+  $interval($scope.foo , 3000, 5);
 
 });
