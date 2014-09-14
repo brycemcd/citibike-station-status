@@ -62,9 +62,11 @@ exampleApp.factory("BikeStationCensus", function($http, $interval){
   var stations = [];
   var refreshTime = new Date();
   
-  var fetch_stations = function() {
+  var fetchStations = function() {
       console.log("fetching:");
-      $http.get("/station_info.json").success(function(data){
+      var url = "http://localhost:4567/bike_info.json";
+      $http.get(url).success(function(data){
+        console.log('exectionTime: ', data.executionTime);
         angular.forEach(data.stationBeanList, function(obj, ind){
           stations.push(obj);
         });
@@ -82,50 +84,53 @@ exampleApp.factory("BikeStationCensus", function($http, $interval){
     return refreshTime;
   }
 
-
-  //$interval(function() { refreshTime = setRefreshTime() }, 1000, 10);
-  //
-
-  this.stations = fetch_stations();
-  //this.refreshTime = $interval(setRefreshTime, 1000, 10);
+  this.stations = fetchStations();
 
   return {
     allBikeStations : this.stations,
-    refreshTime     : function() { return setRefreshTime() },
-    testingData     : 'hello world'
+    refreshBikeStations     : function() { return fetchStations() },
+    lastRefreshTime : refreshTime,
+    refreshTime     : function() { return setRefreshTime() }
   };
 });
 
 exampleApp.factory("WatchedBikeStations", function(BikeStationCensus) {
 
-  var watchList = [72];
+  var watchList = [72, 79, 82];
+
+  var stationRefresh = function() {
+    console.log('watchedStationscall', watchList);
+    var stationObjects = [];
+    angular.forEach(watchList, function(ind, val) {
+      var theStation = _.find(BikeStationCensus.allBikeStations, function(ele) {
+        return ele.id == ind
+      });
+
+      if(theStation) {
+        stationObjects.push(theStation);
+      };
+    }, stationObjects);
+    return stationObjects;
+  };
+
+  var tryitout = function() {
+    console.log('trying', watchList);
+    return stationRefresh();
+  };
 
   return {
     watchedIdList : watchList,
     stationCount: function() {
+      console.log('stationCount');
       return this.watchedIdList.length;
     },
-    watchedStations : function() {
-      console.log('watchedStationscall');
-      var stationObjects = [];
-      angular.forEach(this.watchedIdList, function(ind, val) {
-        var theStation = _.find(BikeStationCensus.allBikeStations, function(ele) {
-          return ele.id == ind
-        });
-
-        if(theStation) {
-          stationObjects.push(theStation);
-        };
-      }, stationObjects);
-      return stationObjects;
-    }
+    watchedStationsRefresh : function() { return stationRefresh(); },
+    watchedStations: tryitout()
   }
 });
 
 exampleApp.controller('bikeFeedCtrl', function($scope, BikeStationCensus, WatchedBikeStations) {
   $scope.allBikeStations = BikeStationCensus.allBikeStations;
-  $scope.watchedBikeStations = WatchedBikeStations.watchedIdList;
-  $scope.refreshTime = BikeStationCensus.refreshTime();
 
 
   $scope.stationFactory = BikeStationCensus;
@@ -133,6 +138,7 @@ exampleApp.controller('bikeFeedCtrl', function($scope, BikeStationCensus, Watche
 
   $scope.addToWatchList = function(id) {
     $scope.watchedStationsFactory.watchedIdList.push(id);
+    $scope.watchedStationsFactory.watchedStations = WatchedBikeStations.watchedStationsRefresh();
   };
 });
 
@@ -143,8 +149,16 @@ exampleApp.controller('trackingCtrl', function($scope, $interval, BikeStationCen
   $scope.watchedStationsFactory = WatchedBikeStations;
 
   $scope.foo = function() {
-    $scope.stationFactory.testingData = BikeStationCensus.refreshTime();
+    $scope.stationFactory.lastRefreshTime = BikeStationCensus.refreshTime();
+    $scope.watchedStationsFactory.watchedStations = WatchedBikeStations.watchedStationsRefresh();
+    $scope.stationFactory.allBikeStations = BikeStationCensus.refreshBikeStations();
   }
-  $interval($scope.foo , 3000, 5);
+  $interval($scope.foo , (1 * 60 * 1000), 5); // 3 minutes
+
+  $scope.setInitialData = function() {
+    console.log('initiing');
+    $scope.watchedStationsFactory.watchedStations = WatchedBikeStations.watchedStationsRefresh();
+  };
+  $scope.setInitialData();
 
 });
