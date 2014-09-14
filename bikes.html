@@ -9,7 +9,7 @@
   <body ng-app="exampleApp">
     <section ng-controller="bikeFeedCtrl" class="row" >
       <h1>All Available Bike Stations:</h1>
-      <h4> Last refreshed @ {{stationFactory.refreshTime()}}</h4>
+      <h4> Last refreshed @ {{stationFactory.testingData}}</h4>
 
       <div ng-repeat="station in allBikeStations" class="small-2 columns" style="border:1px solid red;">
         <p>{{station.stationName}}</p>
@@ -21,7 +21,7 @@
 
     <section ng-controller="trackingCtrl">
       <h1>These are the stations you track</h1>
-      (last updated at {{stationFactory.refreshTime()}})
+      (last updated at {{stationFactory.testingData}})
 
       <table id="bike-stations-container" class="large-6">
         <tr>

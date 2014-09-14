@@ -91,7 +91,8 @@ exampleApp.factory("BikeStationCensus", function($http, $interval){
 
   return {
     allBikeStations : this.stations,
-    refreshTime     : function() { return setRefreshTime() }
+    refreshTime     : function() { return setRefreshTime() },
+    testingData     : 'hello world'
   };
 });
 
@@ -123,11 +124,13 @@ exampleApp.factory("WatchedBikeStations", function(BikeStationCensus) {
 exampleApp.controller('bikeFeedCtrl', function($scope, BikeStationCensus, WatchedBikeStations) {
   $scope.allBikeStations = BikeStationCensus.allBikeStations;
   $scope.watchedBikeStations = WatchedBikeStations.watchedIdList;
+  $scope.refreshTime = BikeStationCensus.refreshTime();
 
 
   $scope.stationFactory = BikeStationCensus;
 
   $scope.addToWatchList = function(id) {
+    $scope.stationFactory.testingData = BikeStationCensus.refreshTime();
     $scope.watchedBikeStations.push(id);
   };
 });
@@ -138,13 +141,10 @@ exampleApp.controller('trackingCtrl', function($scope, $interval, BikeStationCen
 
   $scope.stationFactory = BikeStationCensus;
 
-
   $scope.foo = function() {
-    console.log('foo');
-    BikeStationCensus.refreshTime();
-    BikeStationCensus.allBikeStations;
+    $scope.stationFactory.testingData = BikeStationCensus.refreshTime();
+    //$scope.refreshTime = BikeStationCensus.refreshTime();
   }
-  ////$interval(function() { console.log(BikeStationCensus.refreshTime()); }, 1000, 5);
   $interval($scope.foo , 3000, 5);
 
 });
