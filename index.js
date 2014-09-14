@@ -153,7 +153,8 @@ exampleApp.controller('trackingCtrl', function($scope, $interval, BikeStationCen
     $scope.watchedStationsFactory.watchedStations = WatchedBikeStations.watchedStationsRefresh();
     $scope.stationFactory.allBikeStations = BikeStationCensus.refreshBikeStations();
   }
-  $interval($scope.foo , (1 * 60 * 1000), 5); // 3 minutes
+  //$interval($scope.foo , (3 * 60 * 1000), 5); // 3 minutes
+  $interval($scope.foo , (1000), 5); // 3 minutes
 
   $scope.setInitialData = function() {
     console.log('initiing');
