@@ -7,21 +7,10 @@
     <title>Angular Experiment (Bikes)</title>
   </head>
   <body ng-app="exampleApp">
-    <section ng-controller="bikeFeedCtrl" class="row" >
-      <h1>All Available Bike Stations:</h1>
-      <h4> Last refreshed @ {{lastRefreshTime}}</h4>
-
-      <div ng-repeat="station in stationFactory.allBikeStations" class="small-2 columns" style="border:1px solid red;">
-        <p>{{station.stationName}}</p>
-        <a ng-click="addToWatchList(station.id)">Add To Watchlist</a>
-      </div>
-    </section>
-
-    <hr />
-
     <section ng-controller="trackingCtrl">
       <h1>These are the stations you track</h1>
       (last updated at {{lastRefreshTime}})
+      <br />
       (watchlist {{watchedStationsFactory.watchedIdList | json}}
 
       <table id="bike-stations-container" class="large-6">
@@ -45,6 +34,17 @@
       </table>
     </section>
 
+    <hr />
+
+    <section ng-controller="bikeFeedCtrl" class="row" >
+      <h1>All Available Bike Stations:</h1>
+      <h4> Last refreshed @ {{lastRefreshTime}}</h4>
+
+      <div ng-repeat="station in stationFactory.allBikeStations" class="small-2 columns" style="border:1px solid red;">
+        <p>{{station.stationName}}</p>
+        <a ng-click="addToWatchList(station.id)">Add To Watchlist</a>
+      </div>
+    </section>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
     <script src="http://underscorejs.org/underscore-min.js"></script>

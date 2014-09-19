@@ -87,8 +87,8 @@ exampleApp.factory("BikeStationCensus", function($http, $interval){
 
 exampleApp.factory("WatchedBikeStations", function(BikeStationCensus) {
 
-  var watchList = [72, 79, 82, 128, 519, 517];
-  //var watchList = [72];
+  var watchList = [519, 517, 318, 153, 128, 2004, 348];
+  //var watchList = [72, 79, 82, 128, 519, 517];
 
   var stationRefresh = function() {
     console.log('watchedStationscall', watchList);
