@@ -61,22 +61,6 @@ exampleApp.factory("BikeStationCensus", function($http, $interval){
 
   var stations = [];
   var refreshTime = new Date();
-  
-  var fetchStations = function() {
-      console.log("fetching:");
-      var url = "http://localhost:4567/bike_info.json";
-      $http.get(url).success(function(data){
-        console.log('exectionTime: ', data.executionTime);
-        angular.forEach(data.stationBeanList, function(obj, ind){
-          stations.push(obj);
-        });
-      });
-      return stations;
-  };
-
-  var refresh_functions = function() {
-    this.stations = fetch_stations();
-  };
 
   var setRefreshTime = function() {
     refreshTime = new Date();
@@ -84,11 +68,18 @@ exampleApp.factory("BikeStationCensus", function($http, $interval){
     return refreshTime;
   }
 
-  this.stations = fetchStations();
-
   return {
-    allBikeStations : this.stations,
-    refreshBikeStations     : function() { return fetchStations() },
+    allBikeStations : [],
+    refreshBikeStations     : function() {
+      var url = "/bike_info.json";
+      return $http.get(url).then(function(response) {
+        stations = response.data.stationBeanList;
+        console.log("fetched:: ", stations);
+        return stations;
+      }, function(response) {
+        console.log("wrong: ", response);
+      });
+    },
     lastRefreshTime : refreshTime,
     refreshTime     : function() { return setRefreshTime() }
   };
@@ -96,7 +87,8 @@ exampleApp.factory("BikeStationCensus", function($http, $interval){
 
 exampleApp.factory("WatchedBikeStations", function(BikeStationCensus) {
 
-  var watchList = [72, 79, 82];
+  var watchList = [72, 79, 82, 128, 519, 517];
+  //var watchList = [72];
 
   var stationRefresh = function() {
     console.log('watchedStationscall', watchList);
@@ -113,52 +105,64 @@ exampleApp.factory("WatchedBikeStations", function(BikeStationCensus) {
     return stationObjects;
   };
 
-  var tryitout = function() {
-    console.log('trying', watchList);
-    return stationRefresh();
-  };
-
   return {
     watchedIdList : watchList,
     stationCount: function() {
       console.log('stationCount');
       return this.watchedIdList.length;
     },
-    watchedStationsRefresh : function() { return stationRefresh(); },
-    watchedStations: tryitout()
+    watchedStations: [],
+    watchedStationsRefresh : function(list, bikeStations) {
+      console.log('watchedStationscall', bikeStations);
+      var stationObjects = [];
+      angular.forEach(list, function(ind, val) {
+        var theStation = _.find(bikeStations, function(ele) {
+          return ele.id == ind
+        });
+
+        if(theStation) {
+          stationObjects.push(theStation);
+        };
+      }, stationObjects);
+      return stationObjects;
+    }
   }
 });
 
-exampleApp.controller('bikeFeedCtrl', function($scope, BikeStationCensus, WatchedBikeStations) {
-  $scope.allBikeStations = BikeStationCensus.allBikeStations;
-
-
+exampleApp.controller('bikeFeedCtrl', function($scope,$interval, BikeStationCensus, WatchedBikeStations) {
   $scope.stationFactory = BikeStationCensus;
   $scope.watchedStationsFactory = WatchedBikeStations;
 
   $scope.addToWatchList = function(id) {
     $scope.watchedStationsFactory.watchedIdList.push(id);
-    $scope.watchedStationsFactory.watchedStations = WatchedBikeStations.watchedStationsRefresh();
+    $scope.watchedStationsFactory.watchedStations = WatchedBikeStations.watchedStationsRefresh($scope.watchedStationsFactory.watchedIdList, $scope.stationFactory.allBikeStations);
+    //$scope.watchedStationsFactory.watchedStations = WatchedBikeStations.watchedStationsRefresh();
   };
+
+  $scope.refreshStationCensus = function() {
+    $scope.stationFactory.refreshBikeStations().then(function(responseObj){
+      $scope.lastRefreshTime = new Date();
+      $scope.stationFactory.allBikeStations = responseObj;
+      $scope.watchedStationsFactory.watchedStations = WatchedBikeStations.watchedStationsRefresh($scope.watchedStationsFactory.watchedIdList, $scope.stationFactory.allBikeStations);
+    }, function(error) {
+      console.log("error: ", error);
+    });
+  };
+
+  $scope.refreshStationCensus();
+
+  $interval($scope.refreshStationCensus , (1 * 60 * 1000), 5); // 1 minutes
 });
 
 exampleApp.controller('trackingCtrl', function($scope, $interval, BikeStationCensus, WatchedBikeStations) {
-  $scope.watchedStationIds = WatchedBikeStations.watchedIdList;
-
   $scope.stationFactory = BikeStationCensus;
   $scope.watchedStationsFactory = WatchedBikeStations;
 
-  $scope.foo = function() {
-    $scope.stationFactory.lastRefreshTime = BikeStationCensus.refreshTime();
-    $scope.watchedStationsFactory.watchedStations = WatchedBikeStations.watchedStationsRefresh();
-    $scope.stationFactory.allBikeStations = BikeStationCensus.refreshBikeStations();
-  }
-  //$interval($scope.foo , (3 * 60 * 1000), 5); // 3 minutes
-  $interval($scope.foo , (1000), 5); // 3 minutes
+  $scope.lastRefreshTime = "";
 
   $scope.setInitialData = function() {
     console.log('initiing');
-    $scope.watchedStationsFactory.watchedStations = WatchedBikeStations.watchedStationsRefresh();
+    $scope.watchedStationsFactory.watchedStations = WatchedBikeStations.watchedStationsRefresh($scope.watchedStationsFactory.watchedIdList, $scope.stationFactory.allBikeStations);
   };
   $scope.setInitialData();
 

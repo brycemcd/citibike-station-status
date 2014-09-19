@@ -7,6 +7,10 @@ def request_station_data
   response.body
 end
 
+get "/bikes" do
+  erb :bikes
+end
+
 get "/bike_info.json" do
   response['Access-Control-Allow-Origin'] = "*"
   null = nil
@@ -72,8 +76,8 @@ get "/bike_info.json" do
             "lastCommunicationTime"=> null,
             "landMark"=> ""
           }]}
-  return hsh.to_json
-  #return request_station_data
+  #return hsh.to_json
+  return request_station_data
 end
 
 request_station_data
