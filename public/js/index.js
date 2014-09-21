@@ -151,7 +151,7 @@ exampleApp.controller('bikeFeedCtrl', function($scope,$interval, BikeStationCens
 
   $scope.refreshStationCensus();
 
-  $interval($scope.refreshStationCensus , (1 * 60 * 1000), 5); // 1 minutes
+  $interval($scope.refreshStationCensus , (3 * 60 * 1000)); // 3 minutes
 });
 
 exampleApp.controller('trackingCtrl', function($scope, $interval, BikeStationCensus, WatchedBikeStations) {
