@@ -77,6 +77,8 @@ module CitiBikeCensus
                  "landMark"=> ""
                }]}
       response = HTTParty.get("http://www.citibikenyc.com/stations/json")
+      json = {citi_response: response}.to_json
+      puts json
       return response.body
     end
   end

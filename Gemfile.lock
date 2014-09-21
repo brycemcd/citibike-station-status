@@ -8,6 +8,7 @@ GEM
       multi_xml (>= 0.5.2)
     json (1.8.1)
     multi_xml (0.5.5)
+    newrelic_rpm (3.9.4.245)
     rack (1.4.5)
     rack-protection (1.5.3)
       rack
@@ -28,6 +29,7 @@ PLATFORMS
 
 DEPENDENCIES
   httparty
+  newrelic_rpm
   shotgun
   sinatra
   thin
