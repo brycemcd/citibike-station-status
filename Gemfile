@@ -6,6 +6,11 @@ gem 'httparty'
 gem 'thin'
 gem 'newrelic_rpm'
 
+# templating things
+gem 'bourbon'
+gem 'neat'
+gem 'bitters'
+
 group :development do
   gem 'shotgun'
 end

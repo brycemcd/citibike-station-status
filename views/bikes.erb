@@ -2,12 +2,12 @@
 <html lang="en">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="/css/foundation.min.css" title="foundation" type="text/css" />
+    <link rel="stylesheet" href="/css/application.css" title="bikes" type="text/css" />
 
     <title>Angular Experiment (Bikes)</title>
   </head>
   <body ng-app="exampleApp">
-    <section ng-controller="trackingCtrl">
+    <section id='tracked-stations' ng-controller="trackingCtrl">
       <h1>These are the stations you track</h1>
       (last updated at {{lastRefreshTime}})
       <br />
@@ -34,9 +34,7 @@
       </table>
     </section>
 
-    <hr />
-
-    <section ng-controller="bikeFeedCtrl" class="row" >
+    <section id='all-stations' ng-controller="bikeFeedCtrl" class="row" >
       <h1>All Available Bike Stations:</h1>
       <h4> Last refreshed @ {{lastRefreshTime}}</h4>
 
