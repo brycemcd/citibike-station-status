@@ -1,0 +1,25 @@
+/*
+Errno::ENOENT: No such file or directory @ rb_sysopen - public/css/application.scss
+
+Backtrace:
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/lib/sass/plugin/compiler.rb:369:in `read'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/lib/sass/plugin/compiler.rb:369:in `update_stylesheet'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/lib/sass/plugin/compiler.rb:189:in `block in update_stylesheets'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/lib/sass/plugin/compiler.rb:186:in `each'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/lib/sass/plugin/compiler.rb:186:in `update_stylesheets'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/lib/sass/plugin/compiler.rb:221:in `watch'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/lib/sass/plugin.rb:108:in `method_missing'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/lib/sass/exec.rb:509:in `watch_or_update'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/lib/sass/exec.rb:346:in `process_result'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/lib/sass/exec.rb:43:in `parse'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/lib/sass/exec.rb:22:in `parse!'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/gems/sass-3.3.9/bin/sass:13:in `<top (required)>'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/bin/sass:23:in `load'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/bin/sass:23:in `<main>'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/bin/ruby_executable_hooks:15:in `eval'
+/home/brycemcd/.rvm/gems/ruby-2.1.1/bin/ruby_executable_hooks:15:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Errno::ENOENT: No such file or directory @ rb_sysopen - public/css/application.scss"; }

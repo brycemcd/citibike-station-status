@@ -2,11 +2,21 @@
 <html lang="en">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="/css/application.css" title="bikes" type="text/css" />
+    <link rel="stylesheet" href="/css/prod/application.css" title="bikes" type="text/css" />
 
     <title>Angular Experiment (Bikes)</title>
   </head>
   <body ng-app="exampleApp">
+    <section id='all-stations' ng-controller="bikeFeedCtrl" class="row" >
+      <h1>All Available Bike Stations:</h1>
+      <h4> Last refreshed: <br /> {{lastRefreshTime | date : 'MMM d @ H:m:s'}}</h4>
+
+      <div ng-repeat="station in stationFactory.allBikeStations" class="small-2 columns" style="border:1px solid red;">
+        <p>{{station.stationName}}</p>
+        <a ng-click="addToWatchList(station.id)">Add To Watchlist</a>
+      </div>
+    </section>
+
     <section id='tracked-stations' ng-controller="trackingCtrl">
       <h1>These are the stations you track</h1>
       (last updated at {{lastRefreshTime}})
@@ -16,8 +26,8 @@
       <table id="bike-stations-container" class="large-6">
         <tr>
           <th>Name</th>
-          <th>Available Bikes</th>
-          <th>Available Docks</th>
+          <th class='station-bikes'>Available Bikes</th>
+          <th class='station-docks'>Available Docks</th>
         </tr>
 
         <tr ng-repeat="station in watchedStationsFactory.watchedStations">
@@ -34,15 +44,6 @@
       </table>
     </section>
 
-    <section id='all-stations' ng-controller="bikeFeedCtrl" class="row" >
-      <h1>All Available Bike Stations:</h1>
-      <h4> Last refreshed @ {{lastRefreshTime}}</h4>
-
-      <div ng-repeat="station in stationFactory.allBikeStations" class="small-2 columns" style="border:1px solid red;">
-        <p>{{station.stationName}}</p>
-        <a ng-click="addToWatchList(station.id)">Add To Watchlist</a>
-      </div>
-    </section>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
     <script src="http://underscorejs.org/underscore-min.js"></script>
