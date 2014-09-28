@@ -167,3 +167,42 @@ exampleApp.controller('trackingCtrl', function($scope, $interval, BikeStationCen
   $scope.setInitialData();
 
 });
+exampleApp.controller('mapCtrl', function($scope, $interval, $window, $http) {
+  $scope.positionHistory = [];
+  $scope.currentPosition = {};
+
+  $scope._persistLocation = function() {
+    var url = "/collect_location.json";
+
+    angular.forEach($scope.currentPosition, function(obj, ind) {
+      $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+      $http({
+        url: url,
+        method: "POST",
+        data: {'current_location': obj}
+       }).then(function(response) {
+        console.log("pushed location: ", response.data);
+      }, function(response) {
+        console.log("fail push location: ", response);
+      });
+    });
+  };
+
+  $scope._successPosition = function(position) {
+    position.coords.dttmcollected = new Date();
+    $scope.positionHistory.push(position.coords);
+    $scope.currentPosition = position;
+    $scope._persistLocation();
+  };
+
+  $scope.currentLocation = function() {
+    $window.navigator.geolocation.getCurrentPosition($scope._successPosition);
+  };
+
+  $scope.currentLocation();
+  $interval($scope.currentLocation , (1 * 60 * 1000)); // 1 minutes
+
+  $scope._failPosition = function(position) {
+    console.log('fail: ', position);
+  };
+});

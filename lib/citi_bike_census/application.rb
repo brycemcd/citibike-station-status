@@ -1,3 +1,5 @@
+require 'json'
+
 module CitiBikeCensus
   class Application < Sinatra::Base
     set :root, "#{File.dirname(__FILE__)}/../../"
@@ -9,6 +11,12 @@ module CitiBikeCensus
 
     get "/bikes" do
       erb :bikes
+    end
+
+    post "/collect_location.json" do
+      content_type :json
+      puts params.to_json
+      return {status: :ok}.to_json
     end
 
     get "/bike_info.json" do

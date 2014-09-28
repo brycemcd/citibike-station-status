@@ -44,6 +44,12 @@
       </table>
     </section>
 
+    <section id="map" ng-controller="mapCtrl">
+      {{ currentPosition | json }}
+      <br />
+      {{ positionHistory | json }}
+    </section>
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
     <script src="http://underscorejs.org/underscore-min.js"></script>
