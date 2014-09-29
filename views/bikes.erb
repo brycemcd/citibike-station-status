@@ -45,9 +45,20 @@
     </section>
 
     <section id="map" ng-controller="mapCtrl">
-      {{ currentPosition | json }}
+      <div>
+        last fail: <br />
+        {{ lastFailure | json }}
+      </div>
+      <div>
+        current position:
+        <br />
+        {{ currentPosition | json }}
+      </div>
       <br />
-      {{ positionHistory | json }}
+      <div>
+        history <br />
+        {{ positionHistory | json }}
+      </div>
     </section>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>

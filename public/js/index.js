@@ -170,11 +170,13 @@ exampleApp.controller('trackingCtrl', function($scope, $interval, BikeStationCen
 exampleApp.controller('mapCtrl', function($scope, $interval, $window, $http) {
   $scope.positionHistory = [];
   $scope.currentPosition = {};
+  $scope.lastFailure = {};
 
   $scope._persistLocation = function() {
     var url = "/collect_location.json";
+    var newPositionHistory = [];
 
-    angular.forEach($scope.currentPosition, function(obj, ind) {
+    angular.forEach($scope.positionHistory, function(obj, ind) {
       $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
       $http({
         url: url,
@@ -183,26 +185,45 @@ exampleApp.controller('mapCtrl', function($scope, $interval, $window, $http) {
        }).then(function(response) {
         console.log("pushed location: ", response.data);
       }, function(response) {
+        newPositionHistory.push(obj);
         console.log("fail push location: ", response);
       });
     });
+    $scope.positionHistory = newPositionHistory;
+  };
+
+  $scope._failPosition = function(position) {
+    $scope.lastFailure = position;
+    console.log('fail: ', position);
   };
 
   $scope._successPosition = function(position) {
-    position.coords.dttmcollected = new Date();
-    $scope.positionHistory.push(position.coords);
-    $scope.currentPosition = position;
+    // why do I have to build this?!?
+    var location = {
+      date: new Date(),
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+      accuracy: position.coords.accuracy,
+      altitude: position.coords.altitude,
+      altitudeAccuracy: position.coords.altitudeAccuracy,
+      heading: position.coords.heading,
+      speed: position.coords.speed
+    }
+    $scope.positionHistory.push(location);
+    console.log("location response: ", location);
+    $scope.currentPosition = location;
     $scope._persistLocation();
+    //$scope.$apply();
   };
 
   $scope.currentLocation = function() {
-    $window.navigator.geolocation.getCurrentPosition($scope._successPosition);
+    console.log("fetching location");
+    $window.navigator.geolocation.getCurrentPosition($scope._successPosition,
+                                                     $scope._failPosition,
+                                                     {timeout: 50000});
   };
 
   $scope.currentLocation();
   $interval($scope.currentLocation , (1 * 60 * 1000)); // 1 minutes
 
-  $scope._failPosition = function(position) {
-    console.log('fail: ', position);
-  };
 });

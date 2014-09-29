@@ -15,6 +15,12 @@ section#tracked-stations {
     text-align: center;
   }
 }
+
 section#all-stations {
   @include span-columns(2);
+}
+
+section#map {
+  @include row;
+  @include span-columns(9);
 }
