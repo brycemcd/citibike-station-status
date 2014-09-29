@@ -16,6 +16,7 @@ module CitiBikeCensus
     post "/collect_location.json" do
       content_type :json
       puts params.to_json
+      STDOUT.flush
       return {status: :ok}.to_json
     end
 
